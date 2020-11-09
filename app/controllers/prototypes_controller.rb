@@ -27,8 +27,8 @@ class PrototypesController < ApplicationController
 
   def edit
      @prototype = Prototype.find(params[:id])
-      unless user_signed_in?
-        redirect_to root_path
+      unless @prototype.user_id
+        redirect_to new_user_session_path
       end
   end
 
@@ -42,6 +42,8 @@ class PrototypesController < ApplicationController
   end
 
   def show
+    user = User.find(params[:id])
+    @name = user.name
     @comment = Comment.new
     @comments = @prototype.comments.includes(:user)
     @prototype = Prototype.find(params[:id])
@@ -66,7 +68,7 @@ class PrototypesController < ApplicationController
 
   def move_to_index
     unless user_signed_in?
-      redirect_to action: :index
+      redirect_to new_user_session_path
     end
   end
 end
